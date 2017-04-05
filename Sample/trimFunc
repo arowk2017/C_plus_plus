@@ -1,0 +1,55 @@
+#include <functional>
+#include <cctype>
+#include <locale>
+#include <algorithm> 
+#include <utility>
+
+
+std::string trim_front(std::string s) {
+
+	s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+	return s;
+}
+
+std::string trim_back(std::string s) {
+
+        s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+        return s;
+}
+
+std::string trim(std::string s) {
+
+	return trim_front(trim_back(s));
+}
+
+std::pair<std::string, std::string> nameVal(char *testLine)
+{
+        const char *parse_text;
+        //std::string parse_val;
+
+        int new_count;
+        new_count = atoi(testLine);
+        char text_counter[new_count];
+
+        //parse each key/value pair separated by "&"
+        parse_text = strtok (testLine,"=");
+        std::string parse_name(parse_text, 0, new_count);
+        parse_text = strtok (NULL,"=");
+        std::string parse_val(parse_text, 0, new_count);
+
+        return std::make_pair(parse_name, parse_val);
+}
+
+//searches string and replaces argument 2 with argument 3
+std::string replaceString(std::string newStr, std::string searchStr, std::string replaceWith)
+{
+        size_t position = 0;
+        while ((position =  newStr.find(searchStr, position)) != std::string::npos)
+        {
+                newStr.replace(position, searchStr.length(), replaceWith);
+                position += replaceWith.length();
+
+        }
+
+        return newStr;
+}
